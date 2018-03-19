@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar color="red lighten-1" dark fixed app>
       <v-toolbar-side-icon></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Pomodoro</v-toolbar-title>
     </v-toolbar>
 
     <v-content>
