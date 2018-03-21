@@ -13,6 +13,7 @@ self.addEventListener('activate', () => {
     for (let windowClient of windowClients) {
       // Force open pages to refresh, so that they have a chance to load the
       // fresh navigation response from the local dev server.
+      self.waitUntil(self.clients.claim())
       windowClient.navigate(windowClient.url);
     }
   });

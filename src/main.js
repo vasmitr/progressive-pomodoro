@@ -5,6 +5,7 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import App from './App'
 import router from './router'
+import './messages/client'
 
 Vue.config.productionTip = false
 
