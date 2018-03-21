@@ -102,13 +102,23 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../src/sw.js'),
+        to: path.resolve(__dirname, '../dist'),
+        ignore: ['.*']
+      }
+    ]),
     // service worker caching
     new SWPrecacheWebpackPlugin({
       cacheId: 'pomodoro_app',
       filename: 'service-worker.js',
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
       minify: true,
-      stripPrefix: 'dist/'
+      stripPrefix: 'dist/',
+      importScripts: [
+        './sw.js'
+      ]
     })
   ]
 })
