@@ -14,3 +14,5 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+/static/service-worker-dev.js
+/static/sw.js

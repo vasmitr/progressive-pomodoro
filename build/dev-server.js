@@ -9,6 +9,7 @@ if (!process.env.NODE_ENV) {
 
 const opn = require('opn')
 const path = require('path')
+const fs = require('fs')
 const express = require('express')
 const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
@@ -35,6 +36,13 @@ const devMiddleware = require('webpack-dev-middleware')(compiler, {
 const hotMiddleware = require('webpack-hot-middleware')(compiler, {
   log: false
 })
+
+const devSW = fs.readFileSync(path.join(__dirname, './service-worker-dev.js'))
+const customSW = fs.readFileSync(path.join(__dirname, '../src/sw.js'))
+
+fs.writeFileSync(path.join(__dirname, '../static/service-worker-dev.js'), devSW)
+fs.writeFileSync(path.join(__dirname, '../static/sw.js'), customSW)
+
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {

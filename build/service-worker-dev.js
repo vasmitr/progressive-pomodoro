@@ -4,6 +4,8 @@
 // file that will precache your site's local assets.
 // See https://github.com/facebookincubator/create-react-app/issues/2272#issuecomment-302832432
 
+self.importScripts('sw.js');
+
 self.addEventListener('install', () => self.skipWaiting());
 
 self.addEventListener('activate', () => {
