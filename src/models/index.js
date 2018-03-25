@@ -2,11 +2,13 @@ import uuidv4 from 'uuid/v4'
 import moment from 'moment'
 import store from '@/store'
 
-class BaseTask {
-  constructor (title, desc) {
+export class Task {
+  constructor (title, desc, isPlanned) {
     this.id = uuidv4()
     this.title = title
     this.desc = desc
+    this.completed = false
+    this.planned = isPlanned
   }
 
   remove () {
@@ -18,11 +20,19 @@ class Timer {
   constructor () {
     this.id = uuidv4()
     this.startTime = moment()
-    this.endTime = this.startTime.add(25, 'minutes')
-    this.timer = this.startTime
+    this.timer = 0
     this.completedPercent = 0
     this.active = true
     this.completed = false
+    this.intervalId = null
+  }
+
+  displayTimer () {
+    return this.startTime.clone().add(this.timer, 'seconds')
+  }
+
+  endTime () {
+    return this.startTime.clone().add(25, 'minutes')
   }
 }
 
@@ -39,26 +49,5 @@ export class Break extends Timer {
     super()
     this.breakType = breakType
     this.endTime = this.breakType === 'short' ? this.startTime.add(5, 'minutes') : this.startTime.add(30, 'minutes')
-  }
-}
-
-export class UnplannedTask extends BaseTask {
-  moveToPlanned () {
-    return store.dispatch('planTask', this.id)
-  }
-}
-
-export class PlannedTask extends BaseTask {
-  createTomato () {
-    return store.dispatch('createTomato', this.id)
-  }
-
-  refreshTomato () {
-    store.dispatch('loseTomato')
-    return store.dispatch('createTomato', this.id)
-  }
-
-  completeTask () {
-    return store.dispatch('completeTask', this.id)
   }
 }

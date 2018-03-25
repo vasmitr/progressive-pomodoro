@@ -5,14 +5,14 @@
         <v-card-title><h3>Planned</h3></v-card-title>
         <v-container class="table-wrapper">
           <v-data-table
-            :items="items"
+            :items="getPlannedTasks"
             hide-actions
             item-key="id"
             :expand="true"
           >
             <template slot="items" slot-scope="props">
               <tr @click="props.expanded = !props.expanded" :class="{active: props.item.active}">
-                <td>{{ `#${props.item.id} ${props.item.title}` }}</td>
+                <td>{{ props.item.title }}</td>
                 <td layout>
                   <v-btn icon disabled>
                     <v-icon>expand_more</v-icon>
@@ -21,7 +21,7 @@
               </tr>
             </template>
             <template slot="expand" slot-scope="props">
-              <TaskCard item="props.item"/>
+              <TaskCard :item="props.item"/>
             </template>
           </v-data-table>
         </v-container>
@@ -29,7 +29,7 @@
           <v-container grid-list-xs text-xs-right>
             <v-layout row wrap>
               <v-flex xs12>
-                <TaskForm/>
+                <TaskForm dialog="props.dialog"/>
               </v-flex>
             </v-layout>
           </v-container>
@@ -40,8 +40,19 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
+
   import TaskCard from './TaskCard'
   import TaskForm from './TaskForm'
+
+  const fixColspan = () => {
+    // TODO: temporary fix of https://github.com/vuetifyjs/vuetify/issues/3419
+    const tds = document.getElementsByClassName('datatable__expand-col')
+    for (let i = 0; i < tds.length; i++) {
+      tds[i].setAttribute('colspan', '42')
+      //
+    }
+  }
 
   export default {
     name: 'task-list',
@@ -51,21 +62,19 @@
     },
     data () {
       return {
-        dialog: false,
-        items: [
-          {title: 'Buy milk', id: 1, active: false},
-          {title: 'Buy milk', id: 2, active: true},
-          {title: 'Buy milk', id: 3, active: false}
-        ]
+        dialog: false
       }
     },
+    computed: {
+      ...mapGetters([
+        'getPlannedTasks'
+      ])
+    },
     mounted () {
-      // TODO: temporary fix of https://github.com/vuetifyjs/vuetify/issues/3419
-      const tds = document.getElementsByClassName('datatable__expand-col')
-      for (let i = 0; i < tds.length; i++) {
-        tds[i].setAttribute('colspan', '42')
-        //
-      }
+      fixColspan()
+    },
+    updated () {
+      fixColspan()
     }
   }
 </script>

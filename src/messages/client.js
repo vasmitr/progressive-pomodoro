@@ -1,6 +1,9 @@
+import store from '@/store'
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('message', (event) => {
-    console.log('[Client] got: "' + event.data + '"')
+    const {timerObj, intervalId} = JSON.parse(event.data)
+    store.dispatch('refreshTimer', {tmr: timerObj, intervalId})
   })
 }
 

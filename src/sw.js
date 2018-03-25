@@ -1,8 +1,8 @@
 function sendMessageToClient (client, msg) {
   return new Promise(function (resolve, reject) {
-    var msg_chan = new MessageChannel()
+    var channel = new MessageChannel()
 
-    msg_chan.port1.onmessage = function (event) {
+    channel.port1.onmessage = function (event) {
       if (event.data.error) {
         reject(event.data.error)
       } else {
@@ -10,7 +10,7 @@ function sendMessageToClient (client, msg) {
       }
     }
 
-    client.postMessage("SW Says: '" + msg + "'", [msg_chan.port2])
+    client.postMessage(msg, [channel.port2])
   })
 }
 
@@ -28,9 +28,19 @@ self.addEventListener('activate', () => {
 
 self.addEventListener('message', (event) => {
   console.log('[SW] received message ' + event.data)
-  switch (event.data) {
+  const {action, payload} = JSON.parse(event.data)
+
+  switch (action) {
     case 'START_TIMER':
-      setInterval(() => sendMessageToAllClients('I do some work'), 1000)
+      let timer = payload.timer
+      const intervalId = setInterval(() => {
+        timer += 1
+        const timerObj = {timer: timer, id: payload.id}
+        sendMessageToAllClients(JSON.stringify({timerObj, intervalId}))
+      }, 1000)
+      break
+    case 'STOP_TIMER':
+      clearInterval(payload)
       break
     default:
       console.log('a')
