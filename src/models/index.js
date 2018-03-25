@@ -1,6 +1,5 @@
 import uuidv4 from 'uuid/v4'
 import moment from 'moment'
-
 import store from '@/store'
 
 class BaseTask {
@@ -37,32 +36,25 @@ export class Tomato extends Timer {
 
 export class Break extends Timer {
   constructor (breakType) {
+    super()
     this.breakType = breakType
+    this.endTime = this.breakType === 'short' ? this.startTime.add(5, 'minutes') : this.startTime.add(30, 'minutes')
   }
 }
 
 export class UnplannedTask extends BaseTask {
   moveToPlanned () {
-    return store.dispatch('createFromUnplanned', this.id)
+    return store.dispatch('planTask', this.id)
   }
 }
 
 export class PlannedTask extends BaseTask {
-  tomatoes () {
-    return store.dispatch('getTomatoes', this.id)
-  }
-
-  isActive () {
-    const tomatoes = this.tomatoes()
-    return tomatoes.length !== 0 && tomatoes.filter((tomato) => tomato.active).length !== 0
-  }
-
   createTomato () {
     return store.dispatch('createTomato', this.id)
   }
 
   refreshTomato () {
-    store.dispatch('loseActiveTomato')
+    store.dispatch('loseTomato')
     return store.dispatch('createTomato', this.id)
   }
 
