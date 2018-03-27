@@ -22,6 +22,14 @@ function sendMessageToAllClients (msg) {
   })
 }
 
+function showNotification (title, body) {
+  if (Notification.permission === 'granted') {
+    self.registration.showNotification(title, {
+      body: body
+    })
+  }
+}
+
 self.addEventListener('activate', () => {
   console.log('[SW] Activated')
 })
@@ -38,9 +46,11 @@ self.addEventListener('message', (event) => {
         const timerObj = {timer: timer, id: payload.id}
         sendMessageToAllClients(JSON.stringify({timerObj, intervalId}))
       }, 1000)
+      showNotification('Pomodoro started')
       break
     case 'STOP_TIMER':
       clearInterval(payload)
+      showNotification('Pomodoro ended')
       break
     default:
       console.log('a')
