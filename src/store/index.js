@@ -21,7 +21,7 @@ const store = new Vuex.Store({
       return state.timers.length !== 0 && state.timers.filter((timer) => timer.active)[0]
     },
     getTimerById: (state) => (timerId) => {
-      return state.timers.length !== 0 && state.timers.filter((timer) => timer.id === timerId)[0]
+      return (state.timers.length !== 0 && state.timers.filter((timer) => timer.id === timerId)[0]) || null
     }
   },
   mutations: {
@@ -90,11 +90,13 @@ const store = new Vuex.Store({
     },
     refreshTimer ({commit, getters}, {tmr, intervalId}) {
       const timer = getters.getTimerById(tmr.id)
-      timer.timer = tmr.timer
-      if (timer.displayTimer().clone().isBefore(timer.endTime())) {
-        commit('_refreshTimer', {timer, intervalId})
-      } else {
-        commit('_completeTimer', {timer, intervalId})
+      if (timer) {
+        timer.timer = tmr.timer
+        if (timer.displayTimer().clone().isBefore(timer.endTime())) {
+          commit('_refreshTimer', {timer, intervalId})
+        } else {
+          commit('_completeTimer', {timer, intervalId})
+        }
       }
     }
   }
