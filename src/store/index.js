@@ -12,16 +12,16 @@ const store = new Vuex.Store({
   },
   getters: {
     getPlannedTasks (state) {
-      return state.tasks.filter((task) => !task.completed && task.planned)
+      return [...state.tasks.filter((task) => !task.completed && task.planned)]
     },
     getTaskTomatoes: (state) => (taskId) => {
-      return state.timers.filter((timer) => timer.taskId === taskId && !timer.lost)
+      return [...state.timers.filter((timer) => timer.taskId === taskId && !timer.lost)]
     },
     getActiveTimer: (state) => {
-      return state.timers.length !== 0 && state.timers.filter((timer) => timer.active)[0]
+      return state.timers.length !== 0 ? state.timers.filter((timer) => timer.active)[0] : null
     },
     getTimerById: (state) => (timerId) => {
-      return (state.timers.length !== 0 && state.timers.filter((timer) => timer.id === timerId)[0]) || null
+      return state.timers.length !== 0 ? state.timers.filter((timer) => timer.id === timerId)[0] : null
     }
   },
   mutations: {
@@ -91,11 +91,11 @@ const store = new Vuex.Store({
     refreshTimer ({commit, getters}, {tmr, intervalId}) {
       const timer = getters.getTimerById(tmr.id)
       if (timer) {
-        timer.timer = tmr.timer
-        if (timer.displayTimer().clone().isBefore(timer.endTime())) {
-          commit('_refreshTimer', {timer, intervalId})
+        const newTimer = Object.setPrototypeOf({...timer, 'timer': tmr.timer}, timer)
+        if (newTimer.displayTimer().clone().isBefore(newTimer.endTime()) && !newTimer.displayTimer().clone().isSame(newTimer.startTime)) {
+          commit('_refreshTimer', {timer: newTimer, intervalId})
         } else {
-          commit('_completeTimer', {timer, intervalId})
+          commit('_completeTimer', {timer: newTimer, intervalId})
         }
       }
     }

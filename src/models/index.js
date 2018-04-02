@@ -33,7 +33,7 @@ export class Timer {
   }
 
   endTime () {
-    return this.startTime.clone().add(25, 'minutes')
+    return this.startTime.clone().add(1, 'minutes')
   }
 
   serialize () {

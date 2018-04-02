@@ -14,6 +14,15 @@ import {Timer, Task} from '@/models'
 Vue.config.productionTip = false
 Vue.use(Vuetify)
 
+Notification.requestPermission().then(function (result) {
+  if (result === 'granted') {
+    console.log('Permission granted')
+  }
+  if (result === 'denied') {
+    console.log('Permission denied')
+  }
+})
+
 get('vuexState').then((state) => state ? store.replaceState({
   tasks: state.tasks.map(function (task) {
     return Task.deserialize(task)
@@ -36,5 +45,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: {App}
 })
