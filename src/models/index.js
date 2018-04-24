@@ -9,44 +9,22 @@ export class Task {
     this.completed = false
     this.planned = isPlanned
   }
-
-  static deserialize (obj) {
-    Object.setPrototypeOf(obj, new Task())
-    return obj
-  }
 }
 
 export class Timer {
   constructor () {
     this.id = uuidv4()
-    this.startTime = moment()
+    this.startTime = moment().toISOString()
     this.timer = 0
+    this.period = 25 * 60
     this.completedPercent = 0
     this.active = true
     this.completed = false
     this.intervalId = null
     this.type = 'Timer'
   }
-
-  displayTimer () {
-    return this.startTime.clone().add(this.timer, 'seconds')
-  }
-
-  endTime () {
-    return this.startTime.clone().add(1, 'minutes')
-  }
-
-  serialize () {
-    const newObj = {...this}
-    Object.setPrototypeOf(newObj, this)
-    newObj.startTime = newObj.startTime.toISOString()
-    return newObj
-  }
-
-  static deserialize (obj) {
-    obj.startTime = moment(obj.startTime)
-    Object.setPrototypeOf(obj, obj.type === 'Tomato' ? new Tomato() : new Break())
-    return obj
+  static displayTimer (timer) {
+    return moment(timer.startTime).clone().add(timer.timer, 'seconds')
   }
 }
 
@@ -63,7 +41,7 @@ export class Break extends Timer {
   constructor (breakType) {
     super()
     this.breakType = breakType
-    this.endTime = this.breakType === 'short' ? this.startTime.add(5, 'minutes') : this.startTime.add(30, 'minutes')
+    this.period = this.breakType === 'short' ? 5 : 30
     this.type = 'Break'
   }
 }

@@ -9,7 +9,6 @@ import App from './App'
 import router from './router'
 import store from './store'
 import './messages/client'
-import {Timer, Task} from '@/models'
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
@@ -23,19 +22,12 @@ Notification.requestPermission().then(function (result) {
   }
 })
 
-get('vuexState').then((state) => state ? store.replaceState({
-  tasks: state.tasks.map(function (task) {
-    return Task.deserialize(task)
-  }),
-  timers: state.timers.map(function (timer) {
-    return Timer.deserialize(timer)
-  })
-}) : null)
+get('vuexState').then((state) => state ? store.replaceState({...state}) : null)
 
 store.subscribe((mutation, state) => {
   set('vuexState', {
     tasks: state.tasks,
-    timers: state.timers.map((timer) => timer.serialize())
+    timers: state.timers
   })
 })
 

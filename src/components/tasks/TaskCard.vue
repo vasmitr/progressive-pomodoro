@@ -7,7 +7,7 @@
           <v-icon>timer</v-icon>
         </v-badge>
       </p>
-      <p>{{getActiveTimer && getActiveTimer.displayTimer().format('HH:mm:ss')}}</p>
+      <p>{{showTimer}}</p>
     </v-card-text>
     <v-card-actions>
       <v-container grid-list-xs text-xs-center>
@@ -37,6 +37,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { Timer } from '@/models'
 
   export default {
     name: 'task-card',
@@ -44,7 +45,11 @@
       ...mapGetters([
         'getTaskTomatoes',
         'getActiveTimer'
-      ])
+      ]),
+      showTimer () {
+        let timer = this.getActiveTimer
+        return timer && Timer.displayTimer(timer).format('HH:mm:ss')
+      }
     },
     methods: {
       remove () {

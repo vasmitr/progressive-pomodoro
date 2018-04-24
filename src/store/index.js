@@ -12,9 +12,15 @@ const store = new Vuex.Store({
   },
   getters: {
     getPlannedTasks (state) {
+      if (state.tasks.length === 0) {
+        return []
+      }
       return [...state.tasks.filter((task) => !task.completed && task.planned)]
     },
     getTaskTomatoes: (state) => (taskId) => {
+      if (state.timers.length === 0) {
+        return []
+      }
       return [...state.timers.filter((timer) => timer.taskId === taskId && !timer.lost)]
     },
     getActiveTimer: (state) => {
@@ -37,7 +43,6 @@ const store = new Vuex.Store({
     },
     _completeTask (state, payload) {
       const task = {...payload, completed: true}
-      Object.setPrototypeOf(task, payload)
       state.tasks = [...state.tasks.filter((task) => task.id !== payload.id), task]
     },
     _createTomato (state, taskId) {
@@ -48,19 +53,16 @@ const store = new Vuex.Store({
     },
     _loseTomato (state, payload) {
       const tomato = {...payload, lost: true, active: false}
-      Object.setPrototypeOf(tomato, payload)
       state.timers = [...state.timers.filter((timer) => timer.id !== payload.id), tomato]
       window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: payload.intervalId}))
     },
     _completeTimer (state, payload) {
       const timer = {...payload, completed: true, active: false}
-      Object.setPrototypeOf(timer, payload)
       state.timers = [...state.timers.filter((item) => item.id !== payload.id), timer]
       window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: payload.intervalId}))
     },
     _refreshTimer (state, payload) {
       const timer = {...payload.timer, timer: payload.timer.timer, intervalId: payload.intervalId}
-      Object.setPrototypeOf(timer, payload.timer)
       state.timers = [...state.timers.filter((item) => item.id !== payload.timer.id), timer]
     }
   },
@@ -79,7 +81,7 @@ const store = new Vuex.Store({
     },
     createTomato ({commit, getters}, taskId) {
       const activeTimer = getters.getActiveTimer
-      if (activeTimer && (activeTimer instanceof Tomato)) {
+      if (activeTimer && activeTimer.type === 'Tomato') {
         commit('_loseTomato', activeTimer)
       }
       commit('_createTomato', taskId)
@@ -91,8 +93,8 @@ const store = new Vuex.Store({
     refreshTimer ({commit, getters}, {tmr, intervalId}) {
       const timer = getters.getTimerById(tmr.id)
       if (timer) {
-        const newTimer = Object.setPrototypeOf({...timer, 'timer': tmr.timer}, timer)
-        if (newTimer.displayTimer().clone().isBefore(newTimer.endTime()) && !newTimer.displayTimer().clone().isSame(newTimer.startTime)) {
+        const newTimer = {...timer, 'timer': tmr.timer}
+        if (newTimer.period >= newTimer.timer) {
           commit('_refreshTimer', {timer: newTimer, intervalId})
         } else {
           commit('_completeTimer', {timer: newTimer, intervalId})
