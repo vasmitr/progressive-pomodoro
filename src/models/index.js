@@ -24,7 +24,11 @@ export class Timer {
     this.type = 'Timer'
   }
   static displayTimer (timer) {
-    return moment(timer.startTime).clone().add(timer.timer, 'seconds')
+    let time = timer.period - timer.timer
+    let minutes = Math.floor(time / 60)
+    let seconds = time % 60
+
+    return moment().hours(0).minutes(minutes).seconds(seconds)
   }
 }
 
