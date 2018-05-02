@@ -54,16 +54,20 @@ const store = new Vuex.Store({
     _loseTomato (state, payload) {
       const tomato = {...payload, lost: true, active: false}
       state.timers = [...state.timers.filter((timer) => timer.id !== payload.id), tomato]
+
+      // Clear background interval without push notification
       window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: payload.intervalId}))
     },
-    _completeTimer (state, payload) {
-      const timer = {...payload.timer, timer: payload.timer.timer, completed: true, active: false}
-      state.timers = [...state.timers.filter((item) => item.id !== payload.timer.id), timer]
-      window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: payload.intervalId}))
+    _completeTimer (state, {timer, intervalId}) {
+      let newTimer = {...timer, timer: timer.timer, completed: true, active: false}
+      state.timers = [...state.timers.filter((item) => item.id !== timer.id), newTimer]
+
+      // Clear background interval
+      window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: intervalId}))
     },
-    _refreshTimer (state, payload) {
-      const timer = {...payload.timer, timer: payload.timer.timer, intervalId: payload.intervalId}
-      state.timers = [...state.timers.filter((item) => item.id !== payload.timer.id), timer]
+    _refreshTimer (state, {timer, intervalId}) {
+      let newTimer = {...timer, timer: timer.timer, intervalId: intervalId}
+      state.timers = [...state.timers.filter((item) => item.id !== timer.id), newTimer]
     }
   },
   actions: {
@@ -99,10 +103,10 @@ const store = new Vuex.Store({
     completeTimer ({commit}, payload) {
       commit('_completeTimer', payload)
     },
-    refreshTimer ({commit, getters}, {tmr, intervalId}) {
-      const timer = getters.getTimerById(tmr.id)
-      if (timer) {
-        const newTimer = {...timer, 'timer': tmr.timer}
+    refreshTimer ({commit, getters}, {timerObj, intervalId}) {
+      const currentTimer = getters.getTimerById(timerObj.id)
+      if (currentTimer) {
+        const newTimer = {...currentTimer, 'timer': timerObj.timer}
         console.log(newTimer.timer)
         if (newTimer.period >= newTimer.timer) {
           commit('_refreshTimer', {timer: newTimer, intervalId})

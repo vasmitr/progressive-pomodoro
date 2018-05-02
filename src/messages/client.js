@@ -3,7 +3,7 @@ import store from '@/store'
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('message', (event) => {
     const {timerObj, intervalId} = JSON.parse(event.data)
-    store.dispatch('refreshTimer', {tmr: timerObj, intervalId})
+    store.dispatch('refreshTimer', {timerObj, intervalId})
   })
 }
 
