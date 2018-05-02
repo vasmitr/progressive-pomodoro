@@ -80,12 +80,21 @@ const store = new Vuex.Store({
       commit('_completeTask', payload)
     },
     createTomato ({commit, getters}, taskId) {
-      const activeTimer = getters.getActiveTimer
+      // If active pomodoro exists, we'll lose it
+      let activeTimer = getters.getActiveTimer
       if (activeTimer && activeTimer.type === 'Tomato') {
         commit('_loseTomato', activeTimer)
       }
+
+      // Create new Pomodoro
       commit('_createTomato', taskId)
-      window.sendMessageToSw(JSON.stringify({action: 'START_TIMER', payload: getters.getActiveTimer}))
+
+      // Get new Pomodoro and start background timer
+      let newActiveTimer = getters.getActiveTimer
+      window.sendMessageToSw(JSON.stringify({
+        action: 'START_TIMER',
+        payload: { timer: newActiveTimer.timer, id: newActiveTimer.id }
+      }))
     },
     completeTimer ({commit}, payload) {
       commit('_completeTimer', payload)
