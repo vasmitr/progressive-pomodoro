@@ -57,8 +57,8 @@ const store = new Vuex.Store({
       window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: payload.intervalId}))
     },
     _completeTimer (state, payload) {
-      const timer = {...payload, completed: true, active: false}
-      state.timers = [...state.timers.filter((item) => item.id !== payload.id), timer]
+      const timer = {...payload.timer, timer: payload.timer.timer, completed: true, active: false}
+      state.timers = [...state.timers.filter((item) => item.id !== payload.timer.id), timer]
       window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: payload.intervalId}))
     },
     _refreshTimer (state, payload) {
@@ -103,11 +103,15 @@ const store = new Vuex.Store({
       const timer = getters.getTimerById(tmr.id)
       if (timer) {
         const newTimer = {...timer, 'timer': tmr.timer}
+        console.log(newTimer.timer)
         if (newTimer.period >= newTimer.timer) {
           commit('_refreshTimer', {timer: newTimer, intervalId})
         } else {
           commit('_completeTimer', {timer: newTimer, intervalId})
         }
+      } else {
+        // Clear background interval if timer doesn't exist
+        window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: intervalId}))
       }
     }
   }

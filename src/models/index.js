@@ -16,7 +16,7 @@ export class Timer {
     this.id = uuidv4()
     this.startTime = moment().toISOString()
     this.timer = 0
-    this.period = 25 * 60
+    this.period = 5
     this.completedPercent = 0
     this.active = true
     this.completed = false
