@@ -48,7 +48,7 @@
       ]),
       showTimer () {
         let timer = this.getActiveTimer
-        if (timer.taskId === this.item.id) {
+        if (timer && timer.taskId === this.item.id) {
           return timer && Timer.displayTimer(timer).format('HH:mm:ss')
         }
       }
