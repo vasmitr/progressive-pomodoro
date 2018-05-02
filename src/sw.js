@@ -52,6 +52,9 @@ self.addEventListener('message', (event) => {
       clearInterval(payload)
       showNotification('Pomodoro ended')
       break
+    case 'STOP_TIMER_QUIET':
+      clearInterval(payload)
+      break
     default:
       console.log('a')
   }

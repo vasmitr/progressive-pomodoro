@@ -54,7 +54,7 @@ const store = new Vuex.Store({
     _loseTomato (state, payload) {
       const tomato = {...payload, lost: true, active: false}
       state.timers = [...state.timers.filter((timer) => timer.id !== payload.id), tomato]
-      window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: payload.intervalId}))
+      window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: payload.intervalId}))
     },
     _completeTimer (state, payload) {
       const timer = {...payload, completed: true, active: false}
