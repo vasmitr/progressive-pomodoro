@@ -12,7 +12,7 @@
           >
             <template slot="items" slot-scope="props">
               <tr @click="props.expanded = !props.expanded" :class="{active: props.item.active}">
-                <td>{{ props.item.title }}</td>
+                <td colspan="11">{{ props.item.title }}</td>
                 <td layout>
                   <v-btn icon disabled>
                     <v-icon>expand_more</v-icon>
