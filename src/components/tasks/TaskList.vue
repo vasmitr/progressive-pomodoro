@@ -11,8 +11,8 @@
             :expand="true"
           >
             <template slot="items" slot-scope="props">
-              <tr @click="props.expanded = !props.expanded" :class="{active: props.item.active}">
-                <td colspan="11">{{ props.item.title }}</td>
+              <tr @click="props.expanded = !props.expanded" :class="{active: props.item.active}" :key="props.item.id">
+                <td colspan="11" class="column">{{ props.item.title }}</td>
                 <td layout>
                   <v-btn icon disabled>
                     <v-icon>expand_more</v-icon>
@@ -90,7 +90,7 @@
     color: rgb(239, 83, 80);
   }
 
-  tr td {
+  .table-wrapper .column {
     text-align: left;
   }
 
