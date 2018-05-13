@@ -113,7 +113,8 @@ const store = new Vuex.Store({
         } else {
           commit('_completeTimer', {timer: newTimer, intervalId})
         }
-      } else {
+      // Check that store is initialized from keyval
+      } else if (this.timers.length !== 0) {
         // Clear background interval if timer doesn't exist
         window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: intervalId}))
       }
