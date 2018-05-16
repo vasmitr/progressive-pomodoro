@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="activeTask">
     <v-flex xs12>
       <v-card>
         <v-card-title><h3>Active Task</h3></v-card-title>

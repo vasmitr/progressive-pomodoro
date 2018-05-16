@@ -16,3 +16,4 @@ selenium-debug.log
 *.sln
 /static/service-worker-dev.js
 /static/sw.js
+.vscode/
