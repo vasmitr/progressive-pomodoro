@@ -32,6 +32,11 @@
     color: #2c3e50;
   }
 
+   h3 {
+    text-align: center;
+    width: 100%;
+  }
+
   main {
     text-align: center;
     margin-top: 40px;

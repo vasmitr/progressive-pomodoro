@@ -1,5 +1,6 @@
 <template>
   <v-layout row wrap>
+    <ActiveTask :activeTask="getActiveTask"/>
     <v-flex xs12>
       <v-card>
         <v-card-title><h3>Planned</h3></v-card-title>
@@ -11,7 +12,11 @@
             :expand="true"
           >
             <template slot="items" slot-scope="props">
-              <tr @click="props.expanded = !props.expanded" :class="{active: props.item.active}" :key="props.item.id">
+              <tr 
+                @click="props.expanded = !props.expanded"
+                :class="{active: getActiveTask && getActiveTask.id === props.item.id}"
+                :key="props.item.id"
+                >
                 <td colspan="11" class="column">{{ props.item.title }}</td>
                 <td layout>
                   <v-btn icon disabled>
@@ -44,6 +49,7 @@
 
   import TaskCard from './TaskCard'
   import TaskForm from './TaskForm'
+  import ActiveTask from './ActiveTask'
 
   const fixColspan = () => {
     // TODO: temporary fix of https://github.com/vuetifyjs/vuetify/issues/3419
@@ -57,6 +63,7 @@
   export default {
     name: 'task-list',
     components: {
+      ActiveTask,
       TaskCard,
       TaskForm
     },
@@ -67,7 +74,8 @@
     },
     computed: {
       ...mapGetters([
-        'getPlannedTasks'
+        'getPlannedTasks',
+        'getActiveTask'
       ])
     },
     mounted () {
@@ -80,11 +88,6 @@
 </script>
 
 <style scoped>
-
-  h3 {
-    text-align: center;
-    width: 100%;
-  }
 
   .active {
     color: rgb(239, 83, 80);

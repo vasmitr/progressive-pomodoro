@@ -17,6 +17,10 @@ const store = new Vuex.Store({
       }
       return [...state.tasks.filter((task) => !task.completed && task.planned)]
     },
+    getActiveTask: (state, getters) => {
+      let activeTimer = getters.getActiveTimer
+      return state.tasks.filter((task) => task.id === (activeTimer && activeTimer.taskId))[0]
+    },
     getTaskTomatoes: (state) => (taskId) => {
       if (state.timers.length === 0) {
         return []
@@ -107,14 +111,13 @@ const store = new Vuex.Store({
       const currentTimer = getters.getTimerById(timerObj.id)
       if (currentTimer) {
         const newTimer = {...currentTimer, 'timer': timerObj.timer}
-        console.log(newTimer.timer)
         if (newTimer.period >= newTimer.timer) {
           commit('_refreshTimer', {timer: newTimer, intervalId})
         } else {
           commit('_completeTimer', {timer: newTimer, intervalId})
         }
       // Check that store is initialized from keyval
-      } else if (this.timers.length !== 0) {
+      } else if (this.timers && this.timers.length !== 0) {
         // Clear background interval if timer doesn't exist
         window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: intervalId}))
       }

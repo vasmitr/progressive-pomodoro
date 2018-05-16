@@ -3,7 +3,7 @@
     <v-card-text>
       <p>Tomatoes:
         <v-badge overlap color="red">
-          <span slot="badge" small>{{getTaskTomatoes(item.id).length}}</span>
+          <span slot="badge" small>{{item && getTaskTomatoes(item.id).length}}</span>
           <v-icon>timer</v-icon>
         </v-badge>
       </p>
@@ -13,7 +13,7 @@
       <v-container grid-list-xs text-xs-center>
         <v-layout row wrap>
           <v-flex xs12>
-            <v-btn v-if="!item.active" @click.stop.prevent="addTomato" icon>
+            <v-btn v-if="item && !item.active" @click.stop.prevent="addTomato" icon>
               <v-icon color="red lighten-1">alarm_add</v-icon>
             </v-btn>
             <v-btn v-else icon>
