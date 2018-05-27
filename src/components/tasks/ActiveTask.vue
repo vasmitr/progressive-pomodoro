@@ -11,7 +11,7 @@
           </v-btn>      
         </v-card-actions>
         <v-card-text v-show="show">
-          <p>{{activeTask && activeTask.desc}}</p>
+          <p>{{activeTask && activeTask.desc || 'No description'}}</p>
         </v-card-text>
       </v-card>
     </v-flex>
