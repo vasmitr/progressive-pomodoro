@@ -8,7 +8,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     tasks: [],
-    timers: []
+    timers: [],
+    taskToEdit: {}
   },
   getters: {
     getPlannedTasks (state) {
@@ -32,15 +33,31 @@ const store = new Vuex.Store({
     },
     getTimerById: (state) => (timerId) => {
       return state.timers.length !== 0 ? state.timers.filter((timer) => timer.id === timerId)[0] : null
+    },
+    taskToEdit: (state) => {
+      return {...state.taskToEdit}
     }
   },
   mutations: {
     _createTask (state, payload) {
       const newTask = new Task(payload.title, payload.description, payload.isPlanned)
+      // Hide the edit form
+      state.taskToEdit = null
       state.tasks = [
         newTask,
         ...state.tasks
       ]
+    },
+    _showTaskForm (state, id) {
+      let task = state.tasks.filter((task) => task.id === id)[0]
+      Vue.set(state, 'taskToEdit', task)
+    },
+    _clearTaskForm (state) {
+      Vue.set(state, 'taskToEdit', null)
+    },
+    _editTask (state, payload) {
+      state.tasks = [...state.tasks.filter((task) => task.id !== payload.id), payload]
+      state.taskToEdit = null
     },
     _removeTask (state, id) {
       state.tasks = state.tasks.filter((task) => task.id !== id)
@@ -75,8 +92,17 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    createPlanned ({commit}, payload) {
+    saveTask ({commit}, payload) {
+      commit('_editTask', payload)
+    },
+    createTask ({commit}, payload) {
       commit('_createTask', {...payload, isPlanned: true})
+    },
+    editTask  ({commit}, id) {
+      commit('_showTaskForm', id)
+    },
+    clearTaskForm ({commit}) {
+      commit('_clearTaskForm')
     },
     createUnplanned ({commit}, payload) {
       commit('_createTask', {...payload, isPlanned: false})

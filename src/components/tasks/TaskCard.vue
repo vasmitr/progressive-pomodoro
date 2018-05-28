@@ -22,7 +22,7 @@
             <v-btn icon @click.stop.prevent="complete">
               <v-icon color="red lighten-1">done</v-icon>
             </v-btn>
-            <v-btn icon>
+            <v-btn icon @click.stop.prevent="edit">
               <v-icon color="red lighten-1">edit</v-icon>
             </v-btn>
             <v-btn icon @click.stop.prevent="remove">
@@ -59,6 +59,9 @@
       },
       complete () {
         this.$store.dispatch('completeTask', this.$props.item)
+      },
+      edit () {
+        this.$store.dispatch('editTask', this.$props.item.id)
       },
       addTomato () {
         this.$store.dispatch('createTomato', this.$props.item.id)

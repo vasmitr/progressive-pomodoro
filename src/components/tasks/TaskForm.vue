@@ -14,7 +14,7 @@
               <v-text-field required :error="error" label="title" v-model="editedItem.title" @focus="error = false"></v-text-field>
             </v-flex>
             <v-flex xs12 sm6 md4>
-              <v-text-field multi-line label="description" v-model="editedItem.description"></v-text-field>
+              <v-text-field multi-line label="description" v-model="editedItem.desc"></v-text-field>
             </v-flex>
           </v-layout>
         </v-container>
@@ -38,29 +38,46 @@
         dialog: false,
         error: false,
         editedItem: {
+          id: '',
           title: '',
-          description: ''
+          desc: ''
         }
       }
     },
     methods: {
       ...mapActions([
-        'createPlanned'
+        'saveTask',
+        'createTask',
+        'clearTaskForm'
       ]),
       save () {
         if (this.editedItem.title === '') {
           this.error = true
           return
         }
-        this.createPlanned(this.editedItem)
-        this.dialog = !this.dialog
-        this.error = false
-        this.editedItem.title = ''
-        this.editedItem.description = ''
+        this.editedItem.id ? this.saveTask({...this.taskToEdit, ...this.editedItem}) : this.createTask({...this.editedItem})
+        this.close()
       },
       close () {
         this.dialog = !this.dialog
         this.error = false
+        this.editedItem.id = ''
+        this.editedItem.title = ''
+        this.editedItem.desc = ''
+        this.$store.dispatch('clearTaskForm')
+      }
+    },
+    props: [
+      'taskToEdit'
+    ],
+    watch: {
+      taskToEdit (newVal) {
+        if (newVal && newVal.id) {
+          this.dialog = true
+          this.editedItem.id = newVal.id
+          this.editedItem.title = newVal.title
+          this.editedItem.desc = newVal.desc
+        }
       }
     }
   }

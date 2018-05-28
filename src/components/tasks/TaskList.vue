@@ -34,7 +34,7 @@
           <v-container grid-list-xs text-xs-right>
             <v-layout row wrap>
               <v-flex xs12>
-                <TaskForm dialog="props.dialog"/>
+                <TaskForm :taskToEdit="taskToEdit"/>
               </v-flex>
             </v-layout>
           </v-container>
@@ -67,15 +67,11 @@
       TaskCard,
       TaskForm
     },
-    data () {
-      return {
-        dialog: false
-      }
-    },
     computed: {
       ...mapGetters([
         'getPlannedTasks',
-        'getActiveTask'
+        'getActiveTask',
+        'taskToEdit'
       ])
     },
     mounted () {
