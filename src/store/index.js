@@ -60,6 +60,16 @@ const store = new Vuex.Store({
       state.taskToEdit = null
     },
     _removeTask (state, id) {
+      let taskTimers = [...state.timers.filter((timer) => timer.taskId === id)]
+      let activeTimer = taskTimers.filter((timer) => timer.active)[0]
+
+      if (activeTimer) {
+        // Clear background interval without push notification
+        window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER_QUIET', payload: activeTimer.intervalId}))
+      }
+
+      // Clear task timers
+      state.timers = [...state.timers.filter((timer) => timer.taskId !== id)]
       state.tasks = state.tasks.filter((task) => task.id !== id)
     },
     _completeTask (state, payload) {
@@ -110,7 +120,12 @@ const store = new Vuex.Store({
     removeTask ({commit}, id) {
       commit('_removeTask', id)
     },
-    completeTask ({commit}, payload) {
+    completeTask ({commit, getters}, payload) {
+      // Stop the timer if task active at the moment
+      let activeTimer = getters.getActiveTimer
+      if (activeTimer && activeTimer.type === 'Tomato') {
+        commit('_loseTomato', activeTimer)
+      }
       commit('_completeTask', payload)
     },
     createTomato ({commit, getters}, taskId) {
