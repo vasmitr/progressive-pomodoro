@@ -40,7 +40,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     _createTask (state, payload) {
-      const newTask = new Task(payload.title, payload.description, payload.isPlanned)
+      const newTask = new Task(payload.title, payload.desc, payload.isPlanned)
       // Hide the edit form
       state.taskToEdit = null
       state.tasks = [
