@@ -18,6 +18,12 @@ const store = new Vuex.Store({
       }
       return [...state.tasks.filter((task) => !task.completed && task.planned)]
     },
+    getCompletedTasks (state) {
+      if (state.tasks.length === 0) {
+        return []
+      }
+      return [...state.tasks.filter((task) => task.completed)]
+    },
     getActiveTask: (state, getters) => {
       let activeTimer = getters.getActiveTimer
       return state.tasks.filter((task) => task.id === (activeTimer && activeTimer.taskId))[0]
