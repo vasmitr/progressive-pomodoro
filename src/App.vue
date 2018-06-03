@@ -1,10 +1,36 @@
 <template>
   <v-app>
     <v-toolbar color="red lighten-1" dark fixed app>
-      <v-toolbar-side-icon></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Pomodoro</v-toolbar-title>
     </v-toolbar>
-
+    <v-navigation-drawer
+      v-model="drawer"
+      temporary
+      absolute
+    >
+      <v-list class="pa-1">
+        <v-list-tile avatar>
+          <v-list-tile-avatar>
+            <v-icon>timer</v-icon>
+          </v-list-tile-avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>Pomodoro</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+      <v-list dense class="pt-0">
+        <v-divider></v-divider>
+        <v-list-tile v-for="item in routes" :key="item.title" @click="$router.push(item.location)">
+          <v-list-tile-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
     <v-content>
       <v-container fluid>
         <router-view></router-view>
@@ -16,7 +42,24 @@
 
 <script>
   export default {
-    name: 'app'
+    name: 'app',
+    data () {
+      return {
+        drawer: false,
+        routes: [
+          {
+            title: 'Task List',
+            location: '/tasks',
+            icon: 'list'
+          },
+          {
+            title: 'Completed Task Log',
+            location: '/log',
+            icon: 'done'
+          }
+        ]
+      }
+    }
   }
 </script>
 

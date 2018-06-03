@@ -5,6 +5,7 @@ import { TaskList, TaskLog } from '@/components/tasks'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
