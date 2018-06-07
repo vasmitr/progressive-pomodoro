@@ -1,7 +1,8 @@
 <template>
   <v-layout row wrap>
     <ActiveTask :activeTask="getActiveTask"/>
-    <v-flex xs12>
+    <v-container>
+      <v-flex xs12>
       <v-card>
         <v-card-title><h3>Planned</h3></v-card-title>
         <v-container class="table-wrapper">
@@ -41,6 +42,7 @@
         </v-card-actions>
       </v-card>
     </v-flex>
+    </v-container>
   </v-layout>
 </template>
 
