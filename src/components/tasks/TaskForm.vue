@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog v-model="dialog" max-width="300px">
     <v-btn fab dark slot="activator" color="red lighten-1" icon>
       <v-icon>add</v-icon>
     </v-btn>
@@ -10,10 +10,10 @@
       <v-card-text>
         <v-container grid-list-md>
           <v-layout wrap>
-            <v-flex xs12 sm6 md4>
+            <v-flex xs12>
               <v-text-field required :error="error" label="title" v-model="editedItem.title" @focus="error = false"></v-text-field>
             </v-flex>
-            <v-flex xs12 sm6 md4>
+            <v-flex xs12>
               <v-text-field multi-line label="description" v-model="editedItem.desc"></v-text-field>
             </v-flex>
           </v-layout>

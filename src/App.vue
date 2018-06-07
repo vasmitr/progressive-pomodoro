@@ -103,4 +103,11 @@
     box-sizing: border-box;
     padding-top: 16px;
   }
+
+  @media (min-width: 600px) {
+    .item-wrapper {
+      margin: 0;
+      max-width: 50%;
+    }
+  }
 </style>
