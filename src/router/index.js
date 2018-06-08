@@ -4,9 +4,9 @@ import { TaskList, TaskLog } from '@/components/tasks'
 
 Vue.use(Router)
 
-export default new Router({
-  mode: 'history',
-  routes: [
+let routes
+if (process && process.env.NODE_ENV === 'production') {
+  routes = [
     {
       path: '/',
       redirect: '/tasks'
@@ -22,4 +22,27 @@ export default new Router({
       component: TaskLog
     }
   ]
+} else {
+  routes = [
+    {
+      path: '/',
+      redirect: '/static/tasks'
+    },
+    {
+      path: '/static/tasks',
+      name: 'TaskList',
+      component: TaskList
+    },
+    {
+      path: '/static/log',
+      name: 'TaskLog',
+      component: TaskLog
+    }
+  ]
+}
+
+export default new Router({
+  mode: 'history',
+  relative: true,
+  routes
 })

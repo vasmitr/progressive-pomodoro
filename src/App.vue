@@ -49,12 +49,12 @@
         routes: [
           {
             title: 'Task List',
-            location: '/tasks',
+            location: 'tasks',
             icon: 'list'
           },
           {
             title: 'Completed Task Log',
-            location: '/log',
+            location: 'log',
             icon: 'done'
           }
         ]
