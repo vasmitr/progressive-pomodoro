@@ -5,6 +5,8 @@ import { TaskList, TaskLog } from '@/components/tasks'
 Vue.use(Router)
 
 let routes
+// In development mode service worker serves from "static" folder
+// Its scope will be /static/ and we need to use it as the root path
 if (process && process.env.NODE_ENV === 'production') {
   routes = [
     {
