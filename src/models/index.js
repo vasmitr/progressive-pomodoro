@@ -42,10 +42,9 @@ export class Tomato extends Timer {
 }
 
 export class Break extends Timer {
-  constructor (breakType) {
+  constructor (period) {
     super()
-    this.breakType = breakType
-    this.period = this.breakType === 'short' ? 5 : 30
+    this.period = period * 60
     this.type = 'Break'
   }
 }

@@ -9,7 +9,8 @@ const store = new Vuex.Store({
   state: {
     tasks: [],
     timers: [],
-    taskToEdit: {}
+    taskToEdit: {},
+    showBreakForm: false
   },
   getters: {
     getPlannedTasks (state) {
@@ -42,6 +43,13 @@ const store = new Vuex.Store({
     },
     taskToEdit: (state) => {
       return {...state.taskToEdit}
+    },
+    isBreak: (state, getters) => {
+      let activeTimer = getters.getActiveTimer
+      return activeTimer && activeTimer.type === 'Break'
+    },
+    showBreakForm: (state) => {
+      return state.showBreakForm
     }
   },
   mutations: {
@@ -85,8 +93,8 @@ const store = new Vuex.Store({
     _createTomato (state, taskId) {
       state.timers = [new Tomato(taskId), ...state.timers]
     },
-    _createBreak (state, breakType) {
-      state.timers = [new Break(breakType), ...state.timers]
+    _createBreak (state, period) {
+      state.timers = [new Break(period), ...state.timers]
     },
     _loseTomato (state, payload) {
       const tomato = {...payload, lost: true, active: false}
@@ -101,6 +109,13 @@ const store = new Vuex.Store({
 
       // Clear background interval
       window.sendMessageToSw(JSON.stringify({action: 'STOP_TIMER', payload: intervalId}))
+
+      // Show / hide BreakForm
+      if (newTimer.type === 'Tomato') {
+        Vue.set(state, 'showBreakForm', true)
+      } else {
+        Vue.set(state, 'showBreakForm', false)
+      }
     },
     _refreshTimer (state, {timer, intervalId}) {
       let newTimer = {...timer, timer: timer.timer, intervalId: intervalId}
@@ -143,6 +158,17 @@ const store = new Vuex.Store({
 
       // Create new Pomodoro
       commit('_createTomato', taskId)
+
+      // Get new Pomodoro and start background timer
+      let newActiveTimer = getters.getActiveTimer
+      window.sendMessageToSw(JSON.stringify({
+        action: 'START_TIMER',
+        payload: { timer: newActiveTimer.timer, id: newActiveTimer.id }
+      }))
+    },
+    createBreak ({commit, getters}, period) {
+      // Create new Pomodoro
+      commit('_createBreak', period)
 
       // Get new Pomodoro and start background timer
       let newActiveTimer = getters.getActiveTimer

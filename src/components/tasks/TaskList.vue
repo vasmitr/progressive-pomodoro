@@ -39,6 +39,11 @@
                     <TaskForm :taskToEdit="taskToEdit"/>
                   </v-flex>
                 </v-layout>
+                <v-layout row wrap>
+                  <v-flex xs12>
+                    <BreakForm/>
+                  </v-flex>
+                </v-layout>
               </v-container>
             </v-card-actions>
           </v-card>
@@ -54,6 +59,7 @@
   import TaskCard from './TaskCard'
   import TaskForm from './TaskForm'
   import ActiveTask from './ActiveTask'
+  import BreakForm from './BreakForm'
 
   const fixColspan = () => {
     // TODO: temporary fix of https://github.com/vuetifyjs/vuetify/issues/3419
@@ -69,7 +75,8 @@
     components: {
       ActiveTask,
       TaskCard,
-      TaskForm
+      TaskForm,
+      BreakForm
     },
     computed: {
       ...mapGetters([
