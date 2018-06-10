@@ -27,7 +27,9 @@ get('vuexState').then((state) => state ? store.replaceState({...state}) : null)
 store.subscribe((mutation, state) => {
   set('vuexState', {
     tasks: state.tasks,
-    timers: state.timers
+    timers: state.timers,
+    taskToEdit: state.taskToEdit,
+    showBreakForm: state.showBreakForm
   })
 })
 
