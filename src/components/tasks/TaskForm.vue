@@ -5,7 +5,7 @@
     </v-btn>
     <v-card>
       <v-card-title>
-        <span class="headline">Add new task</span>
+        <h3>Add new task</h3>
       </v-card-title>
       <v-card-text>
         <v-container grid-list-md>
