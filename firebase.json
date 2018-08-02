@@ -3,6 +3,10 @@
     "public": "dist",
     "rewrites": [
         {
+            "source": "/404.html",
+            "destination": "/notfound.html"
+        },
+        {
             "source": "**",
             "destination": "/index.html"
         }
